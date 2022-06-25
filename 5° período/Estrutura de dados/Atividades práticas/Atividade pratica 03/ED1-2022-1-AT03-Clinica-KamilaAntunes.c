@@ -5,284 +5,389 @@
 
 #include<locale.h>
 
-#define TamNome 100
+// #define TamNome 100
+
+typedef struct InfPacientes{
+    int codPac;
+    char nomePac[100];
+    char sexoPac;
+    int idadePac;
+    char pesoPac;
+    float alturaPac;
+    char telefonePac;
+}Informacoes;
 
 /******************************************************************************************************************************************************************************/
 
 // Lista Ordenada
-typedef struct NoLista * ptrNoLista;
+typedef struct NoLista* PtrNoLista;
 
 typedef struct NoLista{
-    int cod;
-    char nome[TamNome];
-    char sexo;
-    int idade;
-    float peso;
-    int altura;
-    int telefone;
-
-    ptrNoLista proximo;
-    ptrNoLista anterior;
+    Informacoes dados;
+    PtrNoLista proximo;
+    PtrNoLista anterior;
 }NoLista;
-
-typedef struct {
-    ptrNoLista inicio;
-    ptrNoLista fim;
-}ListaOrdenada;
 
 /******************************************************************************************************************************************************************************/
 // Implementação da lista ordenada
 
+typedef struct {
+    PtrNoLista inicio;
+    PtrNoLista fim;
+}ListaClinica;
+
+
 // Inicializando a lista ordenada
-void iniciaLista(ListaOrdenada *l){
-    l->inicio = l->fim = NULL;
+void iniciaListaClinica(ListaClinica *lista){
+    lista->inicio = NULL;
+    lista->fim = NULL;
 }
 
 // Verificando se a lista está vazia
-bool verificaListaVazia(ListaOrdenada *l){
-    return (l->inicio == NULL);
+bool verificaListaVazia(ListaClinica *lista){
+    return (lista->inicio == NULL);
 }
 
-// Inserido elementos/nós na lista
-void insereElementosLista(ListaOrdenada *l, int cod, char *nome, char sexo, int idade, float peso, int altura, int telefone){
+// Separando os conteúdos coletadas do arquivo de entrada
+void separaConteudo(PtrNoLista paciente, char conteudo[100]){
+    int i, k = 0;
+    int num = 0;
+    char aux[10] = {};
+    char nome[100] = {};
+    char sexo;
+    int idade = 0;
+    char auxIdade[5] = {};
+    char peso[8] = {};
+    char alturac[10] = {};
+    double alturad;
+    char telefone[15] = {};
 
-    ptrNoLista no = malloc(sizeof(NoLista));
+    int dadoNum = 1;
 
-    // Atribuindo valores para o nó
-    no->cod = cod;
-    strcpy(no->nome, nome);
-    no->sexo = sexo;
-    no->idade = idade;
-    no->peso = peso;
-    no->altura = altura;
-    no->telefone = telefone;
+    for (i = 0; i < strlen(conteudo); i++){
+        // Numerando de acordo com o indice da linha
+        if (dadoNum == 1){
+            // Pesquisando o cod do paciente, transformando de string p inteiro
+            if (conteudo[i] >= 48 && conteudo[i] <= 57){
+                aux[k] = conteudo[i];
 
-    // Caso 1: Se a lista estiver vazia
-    if (verificaListaVazia(l)){
+                if (num != 0){
+                    num += (aux[k] - '0');
+                } else {
+                    num = (aux[k] - '0');
+                }
 
-    // O próximo do nó é o inicio (próximo do nó = NULL)
-    no->proximo = l->inicio;
-    
-    // O anterior do nó é o fim (anterior do nó = NULL)
-    no->anterior = l->fim;
-    
-    // O inicio armazena o nó
-    l->inicio = no;
-    
-    // O fim armazena o nó
-    l->fim = no;
-
-  } else if (cod <= l->inicio->cod){ // Caso 2: Se o elemento se torne o primeiro da lista
-
-    // O próximo do nó é o inicio
-    no->proximo = l->inicio;
-    
-    // O nó não possui anterior logo é igual a nulo (anterior do nó = NULL)
-    no->anterior = NULL;
-    
-    // O anterior do próximo nó é o nó
-    no->proximo->anterior = no;
-    
-    // O inicio armazena o nó
-    l->inicio = no;
-
-  } else { // Caso3: Caso esteja posicionado no meio da lista
-
-    ptrNoLista percorre = l->inicio;
-
-    // Procura a posição correta para armazenar o nó
-    while (percorre->proximo != NULL && cod > percorre->proximo->cod){
-        percorre = percorre->proximo;
-    }
-
-    // O proximo aponta para o próximo do percorre
-    no->proximo = percorre->proximo;
-    
-    // O anterior do nó aponta para percorre
-    no->anterior = percorre;
-    
-    // O próximo do percorre aponta para o nó
-    percorre->proximo = no;
-
-    // Verificando se o próximo do nó não é nulo, para poder atribuir o anterior do próximo nó
-    if (no->proximo == NULL){
-        l->fim = no;
-    } else {
-        no->proximo->anterior = no;
-    }
-
-  }
-
-}
-
-// Imprimindo os dados em forma crescente de acordo com codigo
-void imprimeCrescente(ListaOrdenada *l, FILE *saida){
-
-    ptrNoLista percorre = l->inicio;
-
-    while (percorre != NULL){
-        fprintf(saida, "{%i,%s,%c,%d, %.1f, %d, ,%d}\n", percorre->cod, percorre->nome, percorre->sexo, percorre->idade, percorre->altura, percorre->telefone);
-        percorre = percorre->proximo;
-    }
-
-}
-
-// Imprimindo os dados em forma descrescente de acordo com codigo
-void imprimeDescrescente(ListaOrdenada *l, FILE *saida){
-
-    ptrNoLista percorre = l->fim;
-
-    while(percorre != NULL){
-        fprintf(saida, "{%i,%s,%c,%d, %.1f, %d, ,%d}\n", percorre->cod, percorre->nome, percorre->sexo, percorre->idade, percorre->peso, percorre->altura, percorre->telefone);
-        percorre = percorre->anterior;
-    }
-}
-
-// Pesquisando o codigo e retornando as informações do codigo (nome, sexo, idade, peso, altura, telefone)
-bool pesquisaCod(ListaOrdenada *l, int cod, FILE *saida){
-
-    // Verificando se a lista está vazia e le o codigo é valido
-    if (verificaListaVazia(l) || cod < l->inicio->cod){
-        fprintf(saida, "Elemento não encontrado!\n");
-    
-        return false;
-    }
-
-    // Verificando se o codigo é o primeiro da lista
-    if (cod == l->inicio->cod){
-        fprintf(saida, "{%i,%s,%c,%d, %.1f, %d, ,%d}\n", l->inicio->cod, l->inicio->nome, l->inicio->sexo, l->inicio->idade, l->inicio->peso, l->inicio->altura, l->inicio->telefone);
-    
-        return true;
-    }
-
-    ptrNoLista percorre = l->inicio;
-
-    // Procurando o codigo na lista
-    while (percorre != NULL && cod > percorre->cod){
-        percorre = percorre->proximo;
-    }
-
-    // Verificando se o codigo está correto
-    if (percorre == NULL || cod != percorre->cod){
-        fprintf(saida, "Elemento não encontrado!\n\n");
-    
-        return false;
-    }
-
-    fprintf(saida, "{%i,%s,%c,%d, %.1f, %d, ,%d}\n", percorre->cod, percorre->nome, percorre->sexo, percorre->idade, percorre->peso, percorre->altura, percorre->telefone);
-    return true;
-
-}
-
-// Destroindo a lista ordenada
-void destroiLista(ListaOrdenada *l){
-
-    ptrNoLista percorre = l->inicio;
-    ptrNoLista aux;
-
-    // Percorrendo os nós
-    while(percorre != NULL){
-    
-        // Destroindo os nós
-        aux = percorre;
-        free(aux);
-    
-        // Percorre recebe o próximo nó
-        percorre = percorre->proximo;
-    }
-
-    // Resetando o inicio e fim
-    l->inicio = NULL;
-    l->fim = NULL;
-
-}
-
-/******************************************************************************************************************************************************************************/
-// Lendo o arquivo de entrada
-char leituraArquivo(ListaOrdenada *l, FILE *entrada){
-
-    NoLista le;
-    char caractere, c;
-
-    while ((caractere = fgetc(entrada)) == '{'){
-
-        // Leitura do codigo
-        fscanf(entrada, "%i,", &le.cod);
-
-        memset(le.nome, 0,sizeof(le.nome));
-
-        // Leitura do nome do paciente
-        for (int i = 0; i < TamNome; i++){
-            c = fgetc(entrada);
-
-            if (c != ','){
-                le.nome[i] = c;
-            } else {
-                break;
+                num *= 10;
+                k++;
+            } else if (conteudo[i] ==','){
+                num /= 10;
+                paciente->dados.codPac = num;
+                dadoNum++;
             }
         }
 
-        //Leitura do sexo, idade, peso, altura e telefone
-        fscanf(entrada, "%c,%d,%.1f, %d, %d}\n", &le.sexo, &le.idade, &le.peso, &le.altura, &le.telefone);
+        // Pesquisando o nome do paciene na linha e atribuindo à struct
+        else if (dadoNum == 2){
+            if (!(conteudo[i] == ',')){
+                nome[strlen(nome)] = conteudo[i];
+            } else {
+                strcpy(paciente->dados.nomePac, nome);
+                
+                dadoNum++;
+            }
+        }
 
-        //Inserindo os valores na lista
-        insereElementosLista(l, le.cod, le.nome, le.sexo, le.idade, le.peso, le.altura, le.telefone);
+        // Pesquiso o sexo do paciente na linha e atribuindo à struct
+        else if (dadoNum == 3){
+            if (!(conteudo[i] == ',')){
+                sexo = conteudo[i];
+            } else {
+                paciente->dados.sexoPac = sexo;
+
+                dadoNum++;
+            }
+        }
+
+        // Buscando a idade do paciente na linha, transformando de string p inteiro
+        else if (dadoNum == 4){
+            if (conteudo[i] >= 48 && conteudo[i] <= 57){
+                auxIdade[k] = conteudo[i];
+
+                if (idade != 0){
+                    idade += (auxIdade[k] - '0');
+                } else {
+                    idade = (auxIdade[k] - '0');
+                }
+
+                idade *= 10;
+                k++;
+            } else if (conteudo[i] == ','){
+                idade /= 10;
+                paciente->dados.idadePac = idade;
+
+                dadoNum++;
+            }
+        }
+
+        // Pesquisando o peso do paciente e atribuindo à struct
+        else if (dadoNum == 5){
+            if(!(conteudo[i] == ',')){
+                peso[strlen(peso)] = conteudo[i];
+            } else {
+                strcpy(paciente->dados.pesoPac, peso);
+
+                dadoNum++;
+            }
+        }
+
+        // Pesquisando a altura do paciente e transformando de string para float e atribuindo à struct
+        else if (dadoNum == 6){
+            if (!(conteudo[i] == ',')){
+                alturac[strlen(alturac)] = conteudo[i];
+            } else {
+                char *nptr = &alturac;
+                alturad = atof(nptr);
+
+                paciente->dados.alturaPac = alturad;
+                
+                dadoNum++;
+            }
+        }
+
+        // Pesquisando o telefone do paciente e atribuindo à struct
+        else if (dadoNum == 7){
+            if (!(conteudo[i] == '}')){
+                telefone[strlen(telefone)] = conteudo[i];
+            } else {
+                strcpy(paciente->dados.telefonePac, telefone);
+
+                dadoNum++;
+            }
+        }
     }
-
-    return caractere;
-
 }
 
-/******************************************************************************************************************************************************************************/
+// Inserido elementos/nós na lista
+void insereElementosLista(ListaClinica *lista, char conteudo[100]){
+
+    PtrNoLista novo = malloc(sizeof(NoLista));
+
+    // Inserindo elemnetos caso a lista esteja vazia
+    if (verificaListaVazia(lista)){
+        lista->inicio = novo; // Início da lista recebe o novo
+        lista->fim = novo; // Fim da lista também recebe novo o pq a lista estava vazia
+        novo->proximo = novo; // Próximo do novo aponta p ele mesmo
+        novo->anterior = novo; // Anterior do novo apontap ele mesmo tb
+
+        // Inserção caso o elemento a ser inserido seja menor comparado ao inicial
+    } else if (novo->dados.codPac < lista->inicio->dados.codPac){
+        novo->proximo = lista->inicio; // Novo se torna o início da lista
+        novo->anterior = lista->fim; // Anterior do novo aponta o fim da lista
+        novo->proximo->anterior = novo; // Anterior do início aponta p novo
+        lista->inicio = novo; // Início da lista recebe o novo elemnte
+        lista->fim->proximo = novo; // Próximo do fima da lista aponta p novo
+
+        // Inserção caso o elemento a ser inserido seja maior que o final
+    } else if (novo->dados.codPac > lista->fim->dados.codPac){
+        novo->anterior = lista->fim; // Anterior do novo aponta p o fim da lista
+        novo->proximo = lista->inicio; // Próximo do novo aponta p o início da lista
+        lista->fim->proximo = novo; // Próximo do fim da lista aponta p o novo
+        lista->fim = novo; // Fim da lista recebe o novo
+
+        // Inserindo caso o elemnte seja inserido no meio da lista
+    } else {
+        PtrNoLista aux = lista->inicio;
+
+        // Verifica se o valor inserido é maior que o código 
+        while (aux->proximo != NULL && novo->dados.codPac > aux->proximo->dados.codPac){
+            // Caso seja maior, guardará o próximo da fila
+            aux = aux->proximo;
+        }
+
+        // Quando não for maior, insere o novo na posição guardada
+        novo->proximo= aux->proximo;
+
+        // Anterior do novo recebe aux
+        novo->anterior = aux;
+
+        // Anterior do próximo do novo recebe novo
+        novo->proximo->anterior = novo;
+
+        // Próximo do auxiliar recebe o novo
+        aux->proximo = novo;
+    }
+}
+
+// Imprimindo os dados em ordem crescente
+void imprimeCrescente(ListaClinica lista, FILE* saida){
+    // Se a lista não estiver vazia, imprime as informações do início ao fim da lista
+    if (!verificaListaVazia(&lista)){
+        PtrNoLista aux = lista.inicio;
+
+        do {
+            // Imprime na saída e no compilador em ordem crescente
+            printf("{%d, %s, %c, %d, %s, %.2f, %s}\n", aux->dados.codPac, aux->dados.nomePac, aux->dados.sexoPac, aux->dados.idadePac, aux->dados.pesoPac, aux->dados.alturaPac, aux->dados.telefonePac);
+            fprintf(saida,"{%d, %s, %c, %d, %s, %.2f, %s}\n", aux->dados.codPac, aux->dados.nomePac, aux->dados.sexoPac, aux->dados.idadePac, aux->dados.pesoPac, aux->dados.alturaPac, aux->dados.telefonePac);
+
+            aux = aux->proximo;
+        } while (aux != lista.inicio);
+    }
+}
+
+// Imprimindo os dados em ordem descrescente
+void imprimeDecrescente(ListaClinica lista, FILE* saida){
+    // Se a lista não estivver vazia. imprime as informações do fim para o início
+    if (!verificaListaVazia(&lista)){
+        PtrNoLista aux = lista.fim;
+
+        do  {
+            // Imprime na saída e no compilador em ordem decrescente
+            printf("{%d, %s, %c, %d, %s, %.2f, %s}\n", aux->dados.codPac, aux->dados.nomePac, aux->dados.sexoPac, aux->dados.idadePac, aux->dados.pesoPac, aux->dados.alturaPac, aux->dados.telefonePac);
+            fprintf(saida,"{%d, %s, %c, %d, %s, %.2f, %s}\n", aux->dados.codPac, aux->dados.nomePac, aux->dados.sexoPac, aux->dados.idadePac, aux->dados.pesoPac, aux->dados.alturaPac, aux->dados.telefonePac);
+
+            aux = aux->anterior;
+        } while (aux != lista.inicio);
+
+        // Imprime o primeiro elemente da lista na saída e no compilador
+                printf("{%d, %s, %c, %d, %s, %.2f, %s}", aux->dados.codPac, aux->dados.nomePac, aux->dados.sexoPac, aux->dados.idadePac, aux->dados.pesoPac, aux->dados.alturaPac, aux->dados.telefonePac);
+                fprintf(saida,"{%d, %s, %c, %d, %s, %.2f, %s}", aux->dados.codPac, aux->dados.nomePac, aux->dados.sexoPac, aux->dados.idadePac, aux->dados.pesoPac, aux->dados.alturaPac, aux->dados.telefonePac);
+    }
+}
+
+/*-------------------------------- Função principal ------------------------------------------------*/
 
 int main(int argc, const char * argv[]){
     setlocale(LC_ALL, "Portuguese"); // Definição para uso de caracteres especiais
 
-    FILE *entrada, *saida;
-    char c;
-    int cod;
-
     if (argc != 3){
-        printf("Erro: os parâmetros foram informados incorretamente!\nFechando Programa\n\n");
-        exit(1);
-    } else {
-        entrada = fopen(argv[1], "r");
-        saida = fopen(argv[2], "w");
+        printf("Quantidade de parâmetros inválidas!\n");
 
+        return 1;
+    }
 
-        if (entrada == NULL || saida == NULL){
-            printf("Erro: ocorreu um problema ao abrir os arquivos!\nFechando o programa\n");
-      
-            exit(1);
+    FILE* entrada = fopen(argv[1], "r");
+    FILE* saida = fopen(argv[2], "w");
+    
+    ListaClinica lista;
+    iniciaListaClinica(&lista);
+
+    char linha[50];
+    char* armazenaDados[100];
+
+    int i = 0, j = 0, linhaNum = 0, possuiDados = 0;
+    int numReceb, numBus, numVirg;
+    PtrNoLista aux = lista.inicio;
+
+    while (fgets(linha, 100, entrada) != !EOF){
+        // Zerando a variável de cada linha lida
+        numVirg = 0;
+
+        for (j = 0; j < strlen(linha); j++){
+            if (linha[j] == 4){
+                numVirg++;
+            } else if (linha[j] != '{' && linha[j] != '}'){
+                possuiDados++;
+            }
+        }
+
+        // Passando pelas informações no arquivo de entrada
+        if (!(linha[0] >= 48 && linha[0] <= 57)){
+            if (numVirg != 6){
+                printf("Arquivo inválido!\n");
+                fprintf(saida, "Arquivo inválido!\n");
+
+                return 1;
+            }
+
+            // Controle p erros de qntd de caracteres
+            if (possuiDados == 0){
+                printf("Arquivo inválido!\n");
+                fprintf(saida, "Arquivo inválido!\n");
+
+                return 1;
+            }
+
+            // Insere o cod e as informações na lista
+            insereElementosLista(&lista, linha);
+
+            // Guarda a operação a ser realizada e o número pesquisado, se for o caso
+        } else if (linha[0] >= 48 && linha[0] <= 57){
+            linhaNum++;
+
+            int cod = 0, ind = 0;
+
+            // Converte o número de string p inteiro
+            while (linha[ind] >= 48 && linha[ind] <= 57){
+                if (cod == 0){
+                    cod = (linha[ind] - '0');
+                } else {
+                    cod += (linha[ind] - '0');
+                }
+
+                cod *= 10;
+                ind++;
+            }
+
+            cod /= 10;
+
+            // Verifica se as operações 1, 2 ou 3
+            // Caso 3: guarda os dois valores do final do arquivo de entrada - a operação e o valor a ser pesquisado
+            if (linhaNum == 1){
+                numReceb = cod;
+            } else if (linhaNum == 2){
+                numBus = cod;
+            } else {
+                printf("Elemento não encontrado!\n");
+                fprintf(saida, "Elemento não encontrado!\n");
+            }
         }
     }
 
-    ListaOrdenada lista;
-    iniciaLista(&lista);
+    // Verifica se o elemento a ser buscado existe ou não
+    int count = 0;
 
-    c = leituraArquivo(&lista, entrada);
-
-    switch(c){
-
-        case '1':
-            imprimeCrescente(&lista, saida);
+    switch (numReceb){
+        // Caso 1: imprime a lista em ordem crescente
+        case 1:
+            imprimeCrescente(lista, saida);
             break;
 
-        case '2':
-            imprimeDescrescente(&lista, saida);
+        // Caso 2: imprime em ordem decrescente
+        case 2:
+            imprimeDecrescente(lista, saida);
             break;
 
-        case '3':
-            fscanf(entrada, "%i", &cod);
-            pesquisaCod(&lista, cod, saida);
+        // Caso 3: pesquisa o número abaixo dele na lista e retorno no arquivo
+        case 3:
+            aux = lista.inicio; // Armazena elemento inicial da lista em aux
+
+            // Se o elemento estiver count é incrementado e éretornado
+            do {
+                if (aux->dados.codPac == numBus){
+                    printf("{%d, %s, %c, %d, %s, %.2f, %s}\n", aux->dados.codPac, aux->dados.nomePac, aux->dados.sexoPac, aux->dados.idadePac, aux->dados.pesoPac, aux->dados.alturaPac,aux->dados.telefonePac);
+                    fprintf(saida,"{%d, %s, %c, %d, %s, %.2f, %s}\n", aux->dados.codPac, aux->dados.nomePac, aux->dados.sexoPac, aux->dados.idadePac, aux->dados.pesoPac, aux->dados.alturaPac, aux->dados.telefonePac);
+
+                    count++;
+                }
+                aux = aux->proximo;
+            } while (aux != lista.fim->proximo);
+
+            // Caso count não seja incrementado - o elemento pesquisado não existe na lista
+            if (count == 0){
+                printf("Elemento não encontrado!\n");
+                fprintf(saida, "Elemento não encontrado!\n");
+            }
             break;
 
-        default:
-            fprintf(saida, "Arquivo Inválido");
-            break;
+            default:
+                printf("Arquivo inválido!\n");
+                fprintf(saida, "Arquivo inválido!\n");
+
+                break;
     }
 
-    destroiLista(&lista);
+    fclose(entrada);
+    fclose(saida);
 
     return 0;
 }
