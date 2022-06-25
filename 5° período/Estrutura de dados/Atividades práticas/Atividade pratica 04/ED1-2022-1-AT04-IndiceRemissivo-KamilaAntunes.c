@@ -78,7 +78,7 @@ void inserirLista(Lista *lista, int x){
         novo->proximo = aux->proximo;
         aux->proximo = novo;
     }
-
+    
     lista->tamanho++;
 }
 
