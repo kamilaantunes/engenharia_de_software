@@ -1,0 +1,74 @@
+<!-- Faça o que se pede no slide -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atividade 02 - HTML</title>
+</head>
+<body>
+    <form method="post">
+        <fieldset>
+            <legend> Dados pessoais: </legend>
+                Nome: <input type="text" required> <br> <br>
+                E-mail: <input type="email" required> <br> <br>
+                Password: <input type="password" required> <br> <br>
+                Estado nascimento: 
+                    <select name="estado_nascimento">
+                        <option value=""> </option>
+                        <option value="AC"> AC </option>
+                        <option value="AL"> AL </option>
+                        <option value="AP"> AP </option>
+                        <option value="AM"> AM </option>
+                        <option value="BA"> BA </option>
+                        <option value="CE"> CE </option>
+                        <option value="ES"> ES </option>
+                        <option value="GO"> GO </option>
+                        <option value="MA"> MA </option>
+                        <option value="MT"> MT </option>
+                        <option value="MS"> MS </option>
+                        <option value="MG"> MG </option>
+                        <option value="PA"> PA </option>
+                        <option value="PB"> PB </option>
+                        <option value="PR"> PR </option>
+                        <option value="PE"> PE </option>
+                        <option value="PI"> PI </option>
+                        <option value="RJ"> RJ </option>
+                        <option value="RN"> RN </option>
+                        <option value="RS"> RS </option>
+                        <option value="RO"> RO </option>
+                        <option value="RR"> RR </option>
+                        <option value="SC"> SC </option>
+                        <option value="SP"> SP </option>
+                        <option value="SE"> SE </option>
+                        <option value="TO"> TO </option>
+                        <option value="DF"> DF </option>
+                    </select>
+        </fieldset>
+        <br>
+        <fieldset>
+            <legend> Outros dados: </legend>
+                Deseja receber e-mail com ofertas? <br>
+                <input type="radio"> Sim <br>
+                <input type="radio"> Não <br>
+                <br>
+                Email: sobre qual liguagem você deseja receber e-mail? <br>
+                <input type="checkbox" required name="C#" aria-required=""> C# <br>
+                <input type="checkbox" required name="PHP"required> PHP <br>
+                <input type="checkbox" required name="Delphi"> Delphi <br>
+                <input type="checkbox" required name="Visaul baisc"> Visual basic <br> <br>
+
+                Deixe sua opinião sobre o nosso site :) <br>
+                <textarea rows="10" cols="40" maxlength="500">
+                </textarea>
+        </fieldset>
+        <br>
+        
+        <input type="submit" value="Enviar"> <br> <br>
+        <input type="reset" value="Limpar">
+        
+    </form>
+</body>
+</html>
