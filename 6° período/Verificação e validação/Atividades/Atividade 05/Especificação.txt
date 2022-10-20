@@ -1,0 +1,9 @@
+O Programa Identifier é parte de um compilador que verifica se um identificador é válido em dada
+linguagem de programação:
+O método principal do programa Identifier é o método: public boolean validateIdentifier(String s)
+- Recebe um string s que corresponde a um dado identificador
+- Retorna true se for um identificador válido em Silly Pascal, ou false caso contrário.
+"Um identificador válido deve começar com uma letra e conter apenas letras ou dígitos. Além disso,
+deve ter no mínimo um e nó máximo seis caracteres de comprimento."
+Utilizando a técnica funcional (critérios de análise de valor limite e particionamento em classes de
+equivalência) implemente um conjunto de teste completo para o programa Identifier

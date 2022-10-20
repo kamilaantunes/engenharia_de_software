@@ -1,0 +1,44 @@
+/* * {
+    margin: 0;
+    padding: 0;
+    border: 0;
+} */
+
+body{
+    /* height: 780px;
+    width: 780px;
+    position: fixed; */
+    background-color: #F5F5F5;
+}
+
+h2, nav, input {
+    text-align: center;
+}
+
+nav{
+    padding: 20px;
+}
+
+button {
+    cursor: pointer;
+    padding: 5px;
+    margin: 10px;
+}
+
+#calculadora{
+    background-color: #FFF;
+    text-align: center;
+    border: 1px solid #000;
+}
+
+h3{
+    background-color: azure;
+}
+
+input{
+    padding: 5px;
+}
+
+#calcs{
+    grid-template-columns: auto;
+}
