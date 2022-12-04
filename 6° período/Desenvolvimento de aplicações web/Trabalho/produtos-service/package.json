@@ -1,0 +1,17 @@
+{
+  "name": "produtos-service",
+  "version": "1.0.0",
+  "main": "app.js",
+  "author": "Kamila Antunes",
+  "license": "MIT",
+  "scripts": {
+    "start": "nodemon app.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "nodemon": "^2.0.20",
+    "sequelize": "^6.26.0",
+    "sqlite3": "^5.1.2"
+  },
+  "type": "module"
+}
