@@ -5,20 +5,20 @@ class spiderManBuilder{
         this.spiderMan = new SpiderMan();
     }
 
-    setSuitColor(color){
-        this.spiderMan.suitColor = color;
+    setCorTraje(color){
+        this.spiderMan.corTraje = color;
 
         return this;
     }
 
-    setWebShooters(webShooters){
-        this.spiderMan.webShooters = webShooters;
+    setDisparadorTeias(disparadorTeias){
+        this.spiderMan.disparadorTeias = disparadorTeias;
 
         return this;
     }
 
-    setSuperStrength(superStrength){
-        this.spiderMan.superStrength = superStrength;
+    setSuperForca(superForca){
+        this.spiderMan.superForca = superForca;
 
         return this;
     }
@@ -30,33 +30,33 @@ class spiderManBuilder{
 
 class SpiderMan{
     constructor(){
-        this.suitColor = '';
-        this.webShooters = false;
-        this.superStrength = false;
+        this.corTraje = '';
+        this.disparadorTeias = false;
+        this.superForca = false;
     }
 
-    useWebShooters(){
+    useDisparadorTeias(){
         console.log("Spider-Man soltando teia!");
     }
 
-    useSuperStrength(){
+    useSuperForca(){
         console.log("Spider-Man usando força!")
     }
 
     displayInfo(){
-        console.log(`Spider-Man cor da roupa: ${this.suitColor}`);
-        console.log(`Atirando teria: ${this.webShooters}`);
-        console.log(`Usando força: ${this.superStrength}`);
+        console.log(`Spider-Man cor da roupa: ${this.corTraje}`);
+        console.log(`Atirando teia: ${this.disparadorTeias}`);
+        console.log(`Usando força: ${this.superForca}`);
     }
 }
 
 // Exemplo de uso o padrão Builder para criar um objeto Spider-Man
 const spiderMan = new spiderManBuilder()
-    .setSuitColor('Vermelho e azul')
-    .setWebShooters(true)
-    .setSuperStrength(true)
+    .setCorTraje('Vermelho e azul')
+    .setDisparadorTeias(true)
+    .setSuperForca(true)
     .build();
 
 spiderMan.displayInfo();
-spiderMan.useWebShooters();
-spiderMan.useSuperStrength();
+spiderMan.useDisparadorTeias();
+spiderMan.useSuperForca();
