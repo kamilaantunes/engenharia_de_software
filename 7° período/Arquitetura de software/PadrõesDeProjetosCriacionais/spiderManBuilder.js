@@ -5,8 +5,8 @@ class spiderManBuilder{
         this.spiderMan = new SpiderMan();
     }
 
-    setCorTraje(color){
-        this.spiderMan.corTraje = color;
+    setCorTraje(cor){
+        this.spiderMan.corTraje = cor;
 
         return this;
     }
