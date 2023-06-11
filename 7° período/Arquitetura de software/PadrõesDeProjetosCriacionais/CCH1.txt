@@ -1,6 +1,0 @@
-Para essa tarefa, façam um relatório (individual) de um padrão de projeto de criação.
-Os padrões de projeto que vocês podem investigar são: Builder ou Prototype. O relatório  deve conter um exemplo em código do padrão, na linguagem de programação que preferirem. Além disso:
-    • O exemplo do código deve ser autoral;
-    • Este exemplo pode ser publicado em repositório (e.g., GitHub), no relatório basta deixar o link do repositório;
-    • O relatório deve explicar o exemplo, qual o objetivo e resultado esperado;
-    • Caso prefiram gravar um vídeo explicando o código, basta colocar o link para acesso no relatório.
